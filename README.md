@@ -1,2 +1,551 @@
 # identitypro-website
 Forensic Identity Verification System
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdentityPro - Forensic System</title>
+    <style>
+        /* === PROFESSIONAL FORENSIC THEME === */
+        :root {
+            --primary: #1a237e;
+            --secondary: #0d47a1;
+            --accent: #4fc3f7;
+            --danger: #d32f2f;
+            --success: #388e3c;
+            --warning: #f57c00;
+            --dark: #0a1931;
+            --light: #e3f2fd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark), #1a237e);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        .forensic-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 30px rgba(79, 195, 247, 0.2);
+        }
+        
+        /* === HEADER === */
+        .header {
+            background: linear-gradient(to right, #0d47a1, #1a237e);
+            padding: 25px 40px;
+            border-bottom: 3px solid var(--accent);
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--success), var(--accent), var(--danger));
+        }
+        
+        .app-title {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(79, 195, 247, 0.7);
+            margin-bottom: 10px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            color: #4caf50;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+        
+        /* === UPLOAD SECTION === */
+        .upload-section {
+            padding: 30px 40px;
+            background: rgba(13, 71, 161, 0.2);
+            border-bottom: 1px solid rgba(79, 195, 247, 0.3);
+            text-align: center;
+        }
+        
+        .upload-box {
+            border: 3px dashed var(--accent);
+            padding: 40px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-box:hover {
+            background: rgba(79, 195, 247, 0.1);
+            border-color: #4caf50;
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .upload-text {
+            font-size: 20px;
+            color: #bbbbbb;
+            margin-bottom: 15px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        /* === DATA SECTIONS === */
+        .data-section {
+            padding: 30px 40px;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.2);
+        }
+        
+        .section-header {
+            font-size: 20px;
+            color: var(--accent);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--danger);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-header::before {
+            content: '▶';
+            margin-right: 10px;
+            color: var(--success);
+            font-size: 16px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .data-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid var(--warning);
+            display: flex;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+        
+        .data-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .data-label {
+            color: #4fc3f7;
+            font-weight: 700;
+            min-width: 200px;
+        }
+        
+        .data-value {
+            color: #ffffff;
+            font-weight: 600;
+            text-align: right;
+            flex: 1;
+        }
+        
+        /* === STATUS SECTION === */
+        .status-section {
+            padding: 30px 40px;
+            background: rgba(76, 175, 80, 0.1);
+            border-bottom: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            border: 2px solid var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 10px var(--success); }
+            50% { box-shadow: 0 0 20px var(--success); }
+        }
+        
+        .status-dot {
+            width: 15px;
+            height: 15px;
+            background: var(--success);
+            border-radius: 50%;
+            margin-right: 15px;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-text {
+            font-size: 22px;
+            color: var(--success);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        /* === AUTHENTICATION SECTION === */
+        .auth-section {
+            padding: 30px 40px;
+            background: rgba(103, 58, 183, 0.1);
+        }
+        
+        .auth-mechanism {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 25px;
+            border-radius: 4px;
+            border: 1px solid rgba(103, 58, 183, 0.5);
+            font-size: 12px;
+            line-height: 1.8;
+            color: #ffcc80;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        
+        /* === BUTTONS SECTION === */
+        .buttons-section {
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            border-top: 2px solid var(--danger);
+        }
+        
+        .forensic-btn {
+            padding: 20px 50px;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+        
+        .forensic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .forensic-btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-master {
+            background: linear-gradient(135deg, var(--danger), #b71c1c);
+            color: white;
+        }
+        
+        .btn-master:hover {
+            background: linear-gradient(135deg, #b71c1c, var(--danger));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(211, 47, 47, 0.4);
+        }
+        
+        .btn-selfie {
+            background: linear-gradient(135deg, var(--success), #1b5e20);
+            color: white;
+        }
+        
+        .btn-selfie:hover {
+            background: linear-gradient(135deg, #1b5e20, var(--success));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(56, 142, 60, 0.4);
+        }
+        
+        /* === FOOTER === */
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.95);
+            border-top: 1px solid rgba(79, 195, 247, 0.2);
+            color: #777;
+            font-size: 12px;
+        }
+        
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .forensic-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="forensic-container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="app-title">IdentityPro</div>
+            <div class="section-title">FORENSIC OUTPUT</div>
+        </div>
+        
+        <!-- UPLOAD SECTION -->
+        <div class="upload-section">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📁</div>
+                <div class="upload-text">UPLOAD PHOTO FOR FORENSIC ANALYSIS</div>
+                <div style="color: #aaa; font-size: 14px; margin-top: 10px;">
+                    Click or drag & drop any image document
+                </div>
+            </div>
+            <input type="file" id="fileInput" accept="image/*">
+        </div>
+        
+        <!-- DATA CONTROL SECTION -->
+        <div class="data-section">
+            <div class="section-header">DATA CONTROL</div>
+            <div class="data-grid" id="dataContainer">
+                <!-- Data will be auto-filled here -->
+            </div>
+        </div>
+        
+        <!-- FORENSIC OUTPUT SECTION -->
+        <div class="data-section status-section">
+            <div class="section-header">FORENSIC OUTPUT</div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <div class="status-text">SELFIE READY</div>
+            </div>
+        </div>
+        
+        <!-- AUTHENTICATION SECTION -->
+        <div class="data-section auth-section">
+            <div class="section-header">AUTHENTICATION</div>
+            <div class="auth-mechanism" id="authText">
+                PKI/PMKMS/MD5/SHA256/DES/CBC/PKCS7/SSL/TLS/RSA/ECC/ECDHE/ECDSA/RSASSA-PSS/3DES/IDEA/AES/CAST128/RC4/Blowfish/ARCFOUR/RC6/DRBG/CRYPTOCARD/CRYPTOGRAPHICKEY/GCM/CCM/CTR/SEAL
+            </div>
+        </div>
+        
+        <!-- BUTTONS SECTION -->
+        <div class="buttons-section">
+            <button class="forensic-btn btn-master">BARE MASTER</button>
+            <button class="forensic-btn btn-selfie">SELFIE</button>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+            IdentityPro Forensic System v2.1 | AI-Powered Identity Verification | Secure Protocol v4.0
+        </div>
+    </div>
+
+    <script>
+        // ===== FORENSIC DATA (EXACTLY AS PER YOUR SCREENSHOT) =====
+        const forensicData = [
+            { label: "AUTHOR", value: "AIMED" },
+            { label: "FATHER NAME", value: "AIMED AIMED" },
+            { label: "GIVEN NAMES", value: "BUSHRA" },
+            { label: "PASSPORT NO", value: "BG6754601" },
+            { label: "CITIZENSHIP / CMC", value: "36551-5605371-B" },
+            { label: "ISSUE DATE", value: "05 MAR 2022" },
+            { label: "EXPIRY DATE", value: "05 MAR 2032" }
+        ];
+        
+        const authProtocols = "PKI/PMKMS/MD5/SHA256/DES/CBC/PKCS7/SSL/TLS/RSA/ECC/ECDHE/ECDSA/RSASSA-PSS/3DES/IDEA/AES/CAST128/RC4/Blowfish/ARCFOUR/RC6/DRBG/CRYPTOCARD/CRYPTOGRAPHICKEY/GCM/CCM/CTR/SEAL";
+        
+        // ===== INITIALIZE DATA ON PAGE LOAD =====
+        document.addEventListener('DOMContentLoaded', function() {
+            displayForensicData();
+        });
+        
+        // ===== DISPLAY FORENSIC DATA =====
+        function displayForensicData() {
+            const container = document.getElementById('dataContainer');
+            container.innerHTML = '';
+            
+            forensicData.forEach(item => {
+                const dataItem = document.createElement('div');
+                dataItem.className = 'data-item';
+                dataItem.innerHTML = `
+                    <div class="data-label">${item.label}:</div>
+                    <div class="data-value">${item.value}</div>
+                `;
+                container.appendChild(dataItem);
+            });
+            
+            // Set authentication text
+            document.getElementById('authText').textContent = authProtocols;
+        }
+        
+        // ===== UPLOAD FUNCTIONALITY =====
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadBox.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadBox.style.borderColor = '#4caf50';
+            uploadBox.style.background = 'rgba(76, 175, 80, 0.1)';
+        });
+        
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.borderColor = 'var(--accent)';
+            uploadBox.style.background = 'rgba(0, 0, 0, 0.4)';
+        });
+        
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+            uploadBox.style.borderColor = 'var(--accent)';
+            uploadBox.style.background = 'rgba(0, 0, 0, 0.4)';
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+        
+        function handleFileUpload(file) {
+            if (!file.type.match('image.*')) {
+                alert('Please upload an image file (JPG, PNG, etc.)');
+                return;
+            }
+            
+            // Show processing animation
+            uploadBox.innerHTML = `
+                <div class="upload-icon">⏳</div>
+                <div class="upload-text">PROCESSING FORENSIC DATA...</div>
+                <div style="color: #4fc3f7; font-size: 14px; margin-top: 10px;">
+                    Analyzing: ${file.name}
+                </div>
+            `;
+            
+            // Simulate forensic analysis
+            setTimeout(() => {
+                uploadBox.innerHTML = `
+                    <div class="upload-icon">✅</div>
+                    <div class="upload-text" style="color: #4caf50;">FORENSIC ANALYSIS COMPLETE</div>
+                    <div style="color: #aaa; font-size: 14px; margin-top: 10px;">
+                        ${file.name} | ${(file.size / 1024).toFixed(2)} KB
+                    </div>
+                `;
+                
+                // Show success animation
+                const statusIndicator = document.querySelector('.status-indicator');
+                statusIndicator.style.borderColor = '#4caf50';
+                statusIndicator.style.animation = 'pulse 1s infinite';
+                
+                // Update authentication text
+                document.getElementById('authText').innerHTML = `
+                    ${authProtocols}<br>
+                    <span style="color: #4caf50; font-weight: bold;">
+                    ✅ VERIFIED | SIGNATURE: AI-MID | TIMESTAMP: ${new Date().toLocaleString()}
+                    </span>
+                `;
+                
+            }, 2000);
+        }
+        
+        // ===== BUTTON FUNCTIONALITY =====
+        document.querySelector('.btn-master').addEventListener('click', function() {
+            this.innerHTML = 'ACCESSING RAW DATA...';
+            this.style.background = 'linear-gradient(135deg, #333, #000)';
+            
+            setTimeout(() => {
+                this.innerHTML = 'BARE MASTER';
+                this.style.background = 'linear-gradient(135deg, var(--danger), #b71c1c)';
+                alert('BARE MASTER MODE ACTIVATED\nRaw forensic data access enabled');
+            }, 1500);
+        });
+        
+        document.querySelector('.btn-selfie').addEventListener('click', function() {
+            this.innerHTML = 'CAMERA ACTIVATED...';
+            this.style.background = 'linear-gradient(135deg, #2e7d32, #1b5e20)';
+            
+            setTimeout(() => {
+                this.innerHTML = 'SELFIE';
+                this.style.background = 'linear-gradient(135deg, var(--success), #1b5e20)';
+                
+                // Simulate camera access
+                if (confirm('Allow camera access for live selfie verification?')) {
+                    alert('Camera activated. Please look at the camera for biometric verification.');
+                    
+                    // Update status
+                    document.querySelector('.status-text').textContent = 'LIVE VERIFICATION ACTIVE';
+                    document.querySelector('.status-dot').style.background = '#ff9800';
+                }
+            }, 1500);
+        });
+        
+        // ===== ADD KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'u') {
+                e.preventDefault();
+                fileInput.click();
+            }
+            if (e.key === 'F1') {
+                e.preventDefault();
+                document.querySelector('.btn-master').click();
+            }
+            if (e.key === 'F2') {
+                e.preventDefault();
+                document.querySelector('.btn-selfie').click();
+            }
+        });
+    </script>
+</body>
+</html>
